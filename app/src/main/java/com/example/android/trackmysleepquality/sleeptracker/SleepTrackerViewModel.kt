@@ -38,7 +38,7 @@ class SleepTrackerViewModel(
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private var _tonight = MutableLiveData<SleepNight?>()
+    private var tonight = MutableLiveData<SleepNight?>()
 
     private val nights = database.getAllNights()
 
@@ -49,6 +49,18 @@ class SleepTrackerViewModel(
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
     val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
+
+    val startButtonVisible: LiveData<Boolean> = Transformations.map(tonight){
+        it == null
+    }
+
+    val stopButtonVisible: LiveData<Boolean> = Transformations.map(tonight){
+        it != null
+    }
+
+    val clearButtonVisible: LiveData<Boolean> = Transformations.map(nights){
+        it?.isNotEmpty()
+    }
 
     init {
         initializeTonight()
@@ -61,7 +73,7 @@ class SleepTrackerViewModel(
 
     private fun initializeTonight() {
         uiScope.launch {
-            _tonight.value = getTonightFromDatabase()
+            tonight.value = getTonightFromDatabase()
         }
     }
 
@@ -79,7 +91,7 @@ class SleepTrackerViewModel(
         uiScope.launch {
             val newNight = SleepNight()
             insert(newNight)
-            _tonight.value = getTonightFromDatabase()
+            tonight.value = getTonightFromDatabase()
         }
     }
 
@@ -91,7 +103,7 @@ class SleepTrackerViewModel(
 
     fun onStopTracking(){
         uiScope.launch {
-            val oldNight = _tonight.value ?: return@launch
+            val oldNight = tonight.value ?: return@launch
 
             oldNight.endTimeMilli = System.currentTimeMillis()
 
@@ -110,7 +122,7 @@ class SleepTrackerViewModel(
     fun onClear(){
         uiScope.launch {
             clear()
-            _tonight.value = null
+            tonight.value = null
         }
     }
 
