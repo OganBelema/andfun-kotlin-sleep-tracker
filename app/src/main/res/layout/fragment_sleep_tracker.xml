@@ -59,7 +59,7 @@
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:text="@{sleepTrackerViewModel.nightsString}" />
+                android:text="@{sleepTrackerViewModel.nightString}" />
         </ScrollView>
 
         <!-- With data binding and LiveData, we can track the buttons' visibility states
