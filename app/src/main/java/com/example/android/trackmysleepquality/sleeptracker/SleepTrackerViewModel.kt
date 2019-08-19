@@ -31,7 +31,7 @@ import kotlinx.coroutines.*
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        val database: SleepDatabaseDao,
+        private val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
     private val viewModelJob = Job()
